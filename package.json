@@ -1,0 +1,19 @@
+{
+  "name": "jhamlet-ink",
+  "version": "1.0.0",
+  "description": "My utility belt",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jerry Hamlet <jerry@hamletink.com>",
+  "license": "MIT",
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "prop-types": "^15.6.2",
+    "ramda": "^0.25.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "rxjs": "^6.3.3"
+  }
+}
