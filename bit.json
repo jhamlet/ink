@@ -1,6 +1,6 @@
 {
     "env": {},
     "dependencies": {},
-    "componentsDefaultDirectory": "components/{namespace}/{name}",
+    "componentsDefaultDirectory": "bits/{namespace}/{name}",
     "packageManager": "npm"
 }

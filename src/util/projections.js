@@ -2,7 +2,7 @@ import {
   always, concat, converge, empty, head, ifElse, identity, join, map, of,
   pipe, split, tail, toLower, toUpper
 } from 'ramda';
-import { isArray, isNil } from './predicates';
+import { isArray, isNil } from '@bit/jhamlet.ink.util.predicates';
 /**
  * A `projection` is a mapping function. Something that 'projects' one thing
  * into something else.

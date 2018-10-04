@@ -8,12 +8,12 @@ const globby = bindNodeCallback(require('glob'));
 export const glob =
   (pattern, opts = {}) =>
     globby(pattern, opts).
-    pipe(
-      concatMap(from),
-      concatMap(node),
-      publishReplay(),
-      refCount()
-    );
+      pipe(
+        concatMap(from),
+        concatMap(node),
+        publishReplay(),
+        refCount()
+      );
 
 export default glob;
 

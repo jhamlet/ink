@@ -1,7 +1,7 @@
 import { bindNodeCallback, empty, from } from 'rxjs';
 import { concatMap, map, publishLast, refCount, tap } from 'rxjs/operators';
 import { curryN, flatten, filter, nAry, pipe } from 'ramda';
-import { isString } from '@hamletink/util/predicates';
+import { isString } from '@bit/jhamlet.ink.util.predicates';
 import { join } from 'path';
 
 import {
@@ -26,20 +26,21 @@ export const node = (...args) =>
     pipe(
       concatMap(filename =>
         stat(filename).
-        pipe(
-          map(stats => ({
-            stats,
-            filename,
-            content: stats.isDirectory() ?
-              readdir(filename).
-              concatMap(from).
-              map(prefix(filename)).
-              concatMap(node)
-              : stats.isFile() ? readFile(filename) : empty()
-          }))
-        ),
-        publishLast(),
-        refCount()
+          pipe(
+            map(stats => ({
+              stats,
+              filename,
+              content:
+                stats.isDirectory()
+                  ? readdir(filename).
+                    concatMap(from).
+                    map(prefix(filename)).
+                    concatMap(node)
+                  : stats.isFile() ? readFile(filename) : empty()
+            })),
+            publishLast(),
+            refCount()
+          )
       )
     );
 

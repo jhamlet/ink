@@ -1,6 +1,6 @@
 import { of } from 'rxjs';
 import { concatMap, publishReplay, refCount } from 'rxjs/operators';
-import { directory } from './directory';
+import directory from '@bit/jhamlet.ink.rx.fs/directory';
 
 export const traverse = node =>
   node.stats.isDirectory()
