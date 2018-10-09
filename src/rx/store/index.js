@@ -4,7 +4,7 @@
 
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, publishReplay, refCount, scan } from 'rxjs/operators';
-import { createInitAction, createReplaceAction } from './dispatcher';
+import { createInitAction, createReplaceAction } from './actions';
 
 const { assign } = Object;
 
