@@ -64,7 +64,7 @@ function createStore (reducer, initialState = {}) {
   let destroy = () => {
     currentReducer = currentState = getState = 
       replaceReducer = states = dispatcher = error = complete =
-      destroy = observer = store = null;
+      destroy = observer = store = innnerSubscription = null;
   };
 
   // the interface to the internal Subjects
@@ -74,6 +74,8 @@ function createStore (reducer, initialState = {}) {
   let store = Subject.create(observer, states);
   // extend the api
   assign(store, { dispatch: next, getState, replaceReducer });
+
+  let innnerSubscription = store.subscribe();
 
   store.next(createInitAction());
 
