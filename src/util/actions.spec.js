@@ -1,4 +1,4 @@
-import { ofType, withType }  from './actions';
+import { ofType, withType, withTypeAndPayloadOf }  from './actions';
 
 describe('util/actions', () => {
   describe('ofType(key)', () => {
@@ -8,10 +8,19 @@ describe('util/actions', () => {
   });
 
   describe('withType(key, props)', () => {
-    it('should return an object of the appropriate type along with additional data', () => {
+    it('should return action with correct type and additional properties', () => {
       const result = withType('foo', { data: { bar: 'bar' } });
       expect(result).toHaveProperty('type', 'foo');
       expect(result).toHaveProperty(['data', 'bar'], 'bar');
+    });
+  });
+
+  describe('withTypeAndPayloadOf (typeKey, payloadKey, props)', () => {
+    it('should return action with corect type and payload key', () => {
+      const result = withTypeAndPayloadOf('foo', 'payload', { bar: 'bar' });
+      expect(result).toHaveProperty('type', 'foo');
+      expect(result).toHaveProperty('payload');
+      expect(result).toHaveProperty(['payload', 'bar'], 'bar');
     });
   });
 });
