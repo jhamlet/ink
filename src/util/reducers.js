@@ -1,10 +1,5 @@
-import { assocPath, curryN, path } from 'ramda';
+import { assocPath, path } from 'ramda';
 const { assign } = Object;
-
-const innerReduce = curryN(3, (state, action, reducer) => {
-  const next = reducer(state, action);
-  return next !== state ? next : state;
-});
 
 /**
  * Returns a reducer that works with each given function from left-to-right
