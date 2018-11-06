@@ -1,4 +1,8 @@
-import { assocPath, path } from 'ramda';
+import {
+  assocPath, concat, cond, flip, identity, map, nthArg, path as getPath, pipe, T
+} from 'ramda';
+import { isType } from './predicates';
+
 const { assign } = Object;
 
 /**
@@ -30,7 +34,7 @@ export const composeReducer = (...reducers) =>
  * @returns {Function}
  */
 export const pathReducer = (targetPath, reducer) => {
-  const getter = path(targetPath);
+  const getter = getPath(targetPath);
   const setter = assocPath(targetPath);
 
   return (state, action) => {
@@ -85,3 +89,11 @@ export const collectionReducer = (...args) => {
   return reducer;
 };
 
+export const conditionalReducer = pipe(
+  map(([type, fn]) => [
+    pipe(nthArg(1), isType(type)),
+    fn
+  ]),
+  flip(concat)([[T, identity]]),
+  cond
+);

@@ -1,5 +1,5 @@
 import {
-  collectionReducer, composeReducer, pathReducer, pipeReducer
+  collectionReducer, composeReducer, conditionalReducer, pathReducer, pipeReducer
 } from './reducers';
 import { assoc, assocPath } from 'ramda';
 
@@ -157,22 +157,22 @@ describe('util/reducers', () => {
       state = {};
       reducer = collectionReducer((state, action) => {
         switch (action.type) {
-          case 'foo':
-            return assoc('foo', 'foo', state);
-          default:
-            return state;
-        };
+        case 'foo':
+          return assoc('foo', 'foo', state);
+        default:
+          return state;
+        }
       });
 
       secondReducer = (state, action) => {
         switch (action.type) {
-          case 'bar':
-            return assoc('foo', 'bar', state);
-          case 'baz':
-            return assoc('foo', 'baz', state);
-          default:
-            return state;
-        };
+        case 'bar':
+          return assoc('foo', 'bar', state);
+        case 'baz':
+          return assoc('foo', 'baz', state);
+        default:
+          return state;
+        }
       };
     });
 
@@ -200,6 +200,31 @@ describe('util/reducers', () => {
       remove();
       next = reducer(next, { type: 'baz' });
       expect(next).toHaveProperty('foo', 'bar');
+    });
+  });
+
+  describe('conditionalReducer([...[predicate, reducer]])', () => {
+    it('should return a function', () => {
+      expect(conditionalReducer([
+        [() => true, state => state]
+      ])).
+        toBeInstanceOf(Function);
+    });
+
+    it('should handle every condition', () => {
+      const state = {};
+      const actionA = { type: 'foo' };
+      const actionB = { type: 'bar' };
+
+      const reducer = conditionalReducer([
+        ['foo', assoc('foo', 'foo')],
+        ['bar', assoc('bar', 'bar')]
+      ]);
+
+      expect(reducer(state, actionA)).toEqual({ foo: 'foo' });
+      expect(reducer(state, actionB)).toEqual({ bar: 'bar' });
+      // default condition
+      expect(reducer(state, { type: 'null' })).toBe(state);
     });
   });
 });

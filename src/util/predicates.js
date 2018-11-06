@@ -1,6 +1,6 @@
 import {
-  allPass, complement, flip, gt, gte, identical, is, isEmpty, isNil, lt, lte,
-  pipe, type
+  allPass, anyPass, complement, converge, flip, gt, gte, identical, is,
+  isEmpty, isNil, lt, lte, map, nthArg, pipe, prop, type
 } from 'ramda';
 /**
  * A `predicate`is a function that returns a boolean as to whether something
@@ -35,4 +35,14 @@ export const lteZero = allPass([isNumber, flip(lte)(0)]);
 
 export const isPositiveNumber = allPass([isNumber, flip(gt)(0)]);
 export const isNegativeNumber = allPass([isNumber, flip(lt)(0)]);
+
+export const isOneOf = converge(anyPass, [
+  pipe(nthArg(0), map(is)),
+  nthArg(1)
+]);
+
+export const isType = converge(identical, [
+  nthArg(0),
+  pipe(nthArg(1), prop('type'))
+]);
 
