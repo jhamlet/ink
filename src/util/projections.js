@@ -58,6 +58,19 @@ export const snakeToCamel =
     joinWithEmpty
   );
 
+// @sig (string -> key) -> string -> [key, string]
+export const keyToPair = converge(pair, [
+  converge(call, [ nthArg0, nthArg1 ]),
+  nthArg1
+]);
+
+// @sig (key -> string) -> [string] => { string: string }
+export const enumerate = converge(fromPairs, [
+  converge(map, [
+    converge(keyToPair, [ nthArg0 ]),
+    nthArg1
+  ])
+]);
 //------------------------------------------------------------------------------
 // State -> Props
 //------------------------------------------------------------------------------

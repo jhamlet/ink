@@ -1,43 +1,49 @@
-import {
-  always, assocPath, call, converge, flip, fromPairs, nthArg, pair,
-  pipe, unapply
-} from 'ramda';
+import { get, set, getLink, isLink, link, unlink, remove } from './path';
+import createWatcher from './watcher';
 
-import { get, set, remove, del } from './path';
-import { create as createRef } from './reference';
+export const create = (initial = {}) => {
+  let state = initial;
+  const { get: watch, notify } = createWatcher();
 
-/**
- * Link one path in the object to another.
- *
- * The first is the path you want to link to, the second is the path you want to
- * place the reference at.
- *
- * @sig path -> path -> object -> object
- */
-export const link = converge(assocPath, [
-  nthArg(1),
-  pipe(nthArg(0), createRef),
-  nthArg(2)
-]);
+  const api = {
+    get: path => get(path, state),
 
-const makePair = converge(pair, [
-  nthArg(0),
-  converge(call, [
-    pipe(nthArg(1), flip),
-    nthArg(2)
-  ])
-]);
+    set: (path, value) => {
+      state = set(path, value, state);
+      notify(path, state);
+      return api;
+    },
 
-export const create = converge(unapply(fromPairs), [
-  makePair('get', get),
-  makePair('set', set),
-  makePair('remove', remove),
-  makePair('del', del),
-  converge(pair, [
-    always('link'),
-    converge(link, [ nthArg(1), nthArg(2), nthArg(0) ])
-  ])
-]);
+    getLink: path => getLink(path, state),
+
+    isLink: path => isLink(path, state),
+
+    link: (from, to) => {
+      state = link(from, to, state);
+      notify(to, state);
+      return api;
+    },
+
+    unlink: path => {
+      const link = getLink(path, state);
+      if (link) {
+        state = unlink(path, state);
+        notify(link, state);
+      }
+      return api;
+    },
+
+    remove: path => {
+      state = remove(path, state);
+      notify(path, state);
+      return api;
+    },
+
+    watch
+  };
+
+  return api;
+};
 
 export default create;
 
