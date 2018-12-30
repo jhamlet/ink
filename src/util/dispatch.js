@@ -9,11 +9,39 @@ const isString        = is(String);
 const typeIsString    = pipe(getType, isString);
 const hasTypeAsString = allPass([hasType, typeIsString]);
 
-export const DISPATCH_COMPLETE      = '@@DISPATCH/COMPLETE';
-export const DISPATCH_ERROR         = '@@DISPATCH/ERROR';
+/**
+ * The action `type` property when an observed observable completes
+ * @name DISPATCH_COMPLETE
+ * @property {String}
+ */
+export const DISPATCH_COMPLETE = '@@DISPATCH/COMPLETE';
+/**
+ * The action `type` property when an error is encountered
+ * @name DISPATCH_ERROR
+ * @property {String}
+ */
+export const DISPATCH_ERROR = '@@DISPATCH/ERROR';
+/**
+ * The error message when an error is encountered
+ * @property
+ * @type {String}
+ * @name DISPATCH_ERROR_MESSAGE
+ */
 export const DISPATCH_ERROR_MESSAGE =
   'Dispatched Actions should have a String \'type\' property';
 
+/**
+ * Creates a dispatch subject that can be used to supply a store a stream of
+ * actions.
+ *
+ * By default the subject does not end when an error, or complete, is
+ * encountered. Instead it forward those on as actions in the underlying stream.
+ *
+ * To end the dispatch subject use the returned value's `destroy()` method.
+ *
+ * @name createDispatch
+ * @returns {DispatchSubject}
+ */
 export const createDispatch = () => {
   const dispatches = new Subject();
 

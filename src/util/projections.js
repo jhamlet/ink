@@ -1,7 +1,7 @@
 import {
-  always, apply, call, concat, converge, empty, fromPairs, head, ifElse,
-  identity, join, juxt, map, nth, nthArg, of, pair, path as getPath, pipe,
-  split, tail/* , tap */, toLower, toUpper
+  always, apply, call, concat, converge, curry, curryN, empty, flip, fromPairs,
+  head, ifElse, identical, identity, join, length, map, nthArg, of, pair,
+  path as getPath, pipe, split, tail/* , tap */, toLower, toUpper, unapply
 } from 'ramda';
 import { isArray, isNil } from './predicates';
 /**
@@ -21,6 +21,8 @@ export const defaultToArray      = ifElse(isArray, identity, defaultToEmptyArray
 
 export const createError = message => (new Error(message));
 export const throwError  = error => { throw error; };
+
+export const argsToArray = unapply(identity);
 //------------------------------------------------------------------------------
 // Camel Case and Back Again Utilities
 //------------------------------------------------------------------------------
@@ -71,49 +73,70 @@ export const enumerate = converge(fromPairs, [
     nthArg1
   ])
 ]);
+
 //------------------------------------------------------------------------------
 // State -> Props
 //------------------------------------------------------------------------------
-// @sig key -> [string] -> object -> [string, mixed]
-export const statePathToTuple = converge(pair, [
-  nthArg0,
-  converge(getPath, [nthArg1, nthArg2])
+// @sig [s|n] -> s -> obj -> [s, *]
+export const pathToPropPair = converge(pair, [
+  nthArg(1),
+  converge(getPath, [nthArg(0), nthArg(2)])
 ]);
 
-// @sig key -> [string] -> (() -> mixed) -> state -> [key, mixed]
-export const pathToKeyedTupleDefaultTo = converge(pair, [
-  nthArg0,
-  pipe(
-    converge(statePathToTuple, [nthArg0, nthArg1, nthArg3]),
-    nth(1),
-    converge(ifElse, [always(isNil), nthArg2, always(identity)])
-  )
+export const pathToProp = converge(unapply(fromPairs), [
+  pathToPropPair
 ]);
-
-// @sig key -> [string] -> (() -> value) -> state -> [key, value]
-export const statePathToKeyedTuple = converge(pair, [
-  nthArg0,
+// @sig [s|n] -> s -> (a -> a) -> obj -> [s, *]
+export const pathToPropPairWith = converge(pair, [
+  nthArg(1),
   converge(call, [
-    converge(ifElse, [
-      always(isNil),
-      nthArg2,
-      always(identity),
-    ]),
-    converge(getPath, [
-      nthArg1,
-      nthArg3
-    ])
+    nthArg(2),
+    converge(getPath, [nthArg(0), nthArg(3)])
   ])
 ]);
 
-export const mapPropsFromState = (specs, fn) => {
-  const get = pipe(
-    juxt(map(apply(statePathToKeyedTuple), specs)),
-    fromPairs
-  );
+export const pathToPropWith = converge(unapply(fromPairs), [
+  pathToPropPairWith
+]);
 
-  return (state, ownProps) => {
-    return fn ? fn(get(state), ownProps) : get(state);
-  };
-};
+const lengthIs = converge(identical, [
+  nthArg(0),
+  pipe(nthArg(1), length)
+]);
+
+export const applyPropToPair = converge(call, [
+  ifElse(
+    pipe(nthArg(0), lengthIs(3)),
+    apply(pathToPropPairWith),
+    apply(pathToPropPair),
+  ),
+  nthArg(1)
+]);
+
+// @sig [...[[s|n], keyN]] -> obj -> {key0: *, key1: *, ...}
+export const pathsToPropPairs = curry((specs, obj) =>
+  map(flip(applyPropToPair)(obj), specs));
+
+export const pathsToProps = curryN(2, pipe(pathsToPropPairs, fromPairs));
+
+export const pathsToPropsWith = converge(call, [
+  nthArg(1),
+  converge(pathsToProps, [ nthArg(0), nthArg(2) ]),
+  nthArg(3)
+]);
+
+export const mapPathsToProps = converge(apply, [
+  ifElse(
+    pipe(argsToArray, lengthIs(2)),
+    always(pathsToPropsWith),
+    always(pathsToProps)
+  ),
+  argsToArray
+]);
+
+// export const mapPathsToProps = (specs, fn) =>
+//   (state, ownProps) => {
+//     const props = pathsToProps(specs, state);
+//     return fn ? fn(props, ownProps) : props;
+//   };
 

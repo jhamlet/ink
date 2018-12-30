@@ -111,7 +111,7 @@ export const unlink = ifElse(
 /**
  * @sig path -> object -> object
  */
-export const remove = converge(unlink, [
+export const del = converge(unlink, [
   nthArg(0),
   converge(dissocPath, [ resolve, nthArg(1) ]),
 ]);

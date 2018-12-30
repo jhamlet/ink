@@ -1,4 +1,4 @@
-import { get, isLink, link, remove, resolve, set } from './path';
+import { get, isLink, link, del, resolve, set } from './path';
 
 describe('json/path', () => {
   describe('get([string|number], object): any', () => {
@@ -47,19 +47,19 @@ describe('json/path', () => {
     });
   });
 
-  describe('remove([string|number], object): object', () => {
+  describe('del([string|number], object): object', () => {
     let state = {};
     state = set(['foo', 'bar', 'baz'], 'foo-bar-baz', state);
     state = set(['a', 'b', 'c'], 'abc', state);
     state = link(['foo', 'bar', 'baz'], ['x', 'y', 'z'], state);
 
-    it('should remove the value at the given pth', () => {
-      const r =  remove(['a', 'b', 'c'], state);
+    it('should delete the value at the given pth', () => {
+      const r =  del(['a', 'b', 'c'], state);
       expect(r).not.toHaveProperty(['a', 'b', 'c'], 'abc');
     });
 
-    it('should remove link and original value', () => {
-      const r = remove(['x', 'y', 'z'], state);
+    it('should delete link and original value', () => {
+      const r = del(['x', 'y', 'z'], state);
       expect(r).not.toHaveProperty(['foo', 'bar', 'baz']);
       expect(r).not.toHaveProperty(['x', 'y', 'z']);
     });
