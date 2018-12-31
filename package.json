@@ -1,8 +1,7 @@
 {
-  "name": "jhamlet-ink",
+  "name": "@hamletink/bits",
   "version": "1.0.0",
   "description": "My utility belt",
-  "private": true,
   "scripts": {
     "lint": "eslint",
     "test": "jest --no-watchman --testRegex '.*\\.spec\\.js$'"
