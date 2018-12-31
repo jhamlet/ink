@@ -6,7 +6,7 @@ import {
 import { isNil } from '../util/predicates';
 import { defaultToArray } from '../util/projections';
 
-export const LINK_KEY = '@@json-graoh/link';
+export const LINK_KEY = '@@JSON-GRAPH/LINK';
 
 /**
  * @sig [string|number] -> {symbol: [string|number]}
