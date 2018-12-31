@@ -65,30 +65,28 @@ const API = assign(Object.create(null), {
   },
 
   traverse: (() => {
-    const INORDER   = 1;
-    const POSTORDER = 2;
-    const PREORDER  = 3;
-    const fn = function traverse (visitor, order = PREORDER) {
+    const POST_ORDER = 1;
+    const PRE_ORDER  = 2;
 
+    const fn = function traverse (visitor, order = PRE_ORDER) {
+      const { children } = this;
+
+      if (PRE_ORDER === order) {
+        visitor(this);
+      }
+
+      if (children.length) {
+        children.slice(forEach(child => child.traverse(visistor, order)))
+      }
+
+      if (POST_ORDER === order) {
+        visitor(this);
+      }
     };
 
-    assign(fn, )
-  })()
-  traverse (visitor, postorder = false) {
-    const { children } = this;
+    return assign(fn, { IN_ORDER, POST_ORDER, PRE_ORDER });
+  })(),
 
-    if (postorder) {
-      visitor(this);
-    }
-
-    if (children.length) {
-      children.slice().forEach(c => c.traverse(visitor));
-    }
-
-    if (!postorder) {
-      visitor(this);
-    }
-  }
 });
 
 export const create = (value, children = [], parent = null) =>
