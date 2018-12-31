@@ -12,30 +12,35 @@ const hasTypeAsString = allPass([hasType, typeIsString]);
 /**
  * The action `type` property when an observed observable completes
  * @name DISPATCH_COMPLETE
- * @property {String}
+ * @type {String}
  */
 export const DISPATCH_COMPLETE = '@@DISPATCH/COMPLETE';
 /**
  * The action `type` property when an error is encountered
  * @name DISPATCH_ERROR
- * @property {String}
+ * @type {String}
  */
 export const DISPATCH_ERROR = '@@DISPATCH/ERROR';
 /**
  * The error message when an error is encountered
- * @property
- * @type {String}
  * @name DISPATCH_ERROR_MESSAGE
+ * @type {String}
  */
 export const DISPATCH_ERROR_MESSAGE =
   'Dispatched Actions should have a String \'type\' property';
+
+/**
+ * @typedef DispatchSubject
+ * @implements rxjs.Subject
+ */
 
 /**
  * Creates a dispatch subject that can be used to supply a store a stream of
  * actions.
  *
  * By default the subject does not end when an error, or complete, is
- * encountered. Instead it forward those on as actions in the underlying stream.
+ * encountered. Instead it forwards those on as actions in the underlying
+ * stream.
  *
  * To end the dispatch subject use the returned value's `destroy()` method.
  *
