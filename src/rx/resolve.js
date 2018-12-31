@@ -4,7 +4,7 @@ import { curry } from 'ramda';
 import glob from './glob';
 import { explode } from 'path';
 import { join } from 'path';
-import { defaultToArray } from '@bit/jhamlet.ink.util.projections';
+import { defaultToArray } from '../util/projections';
 
 export const resolve = curry((patterns,  opts = {}) => {
   const { cwd = process.cwd() } = opts;

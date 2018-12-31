@@ -1,7 +1,7 @@
 import { bindNodeCallback, empty, from } from 'rxjs';
 import { concatMap, map, publishLast, refCount, tap } from 'rxjs/operators';
 import { curryN, flatten, filter, nAry, pipe } from 'ramda';
-import { isString } from '@bit/jhamlet.ink.util.predicates';
+import { isString } from '../util/predicates';
 import { join } from 'path';
 
 import {

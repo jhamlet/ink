@@ -1,7 +1,7 @@
 import { bindNodeCallback, from } from 'rxjs';
 import { concatMap, publishReplay, refCount } from 'rxjs/operators';
 
-import { node } from './';
+import { node } from './file';
 
 const globby = bindNodeCallback(require('glob'));
 

@@ -32,14 +32,14 @@ export const watchFile = (filepath, opts) =>
       take(1),
       concatMap(event =>
         of(event).
-        pipe(
-          // give tick to allow for file system to update
-          // should probably check stats...
-          delay(0),
-          concat(watchFile(filepath, opts))
-        )
+          pipe(
+            // give tick to allow for file system to update
+            // should probably check stats...
+            delay(0),
+            concat(watchFile(filepath, opts))
+          )
       )
-    )
+    );
 
 export default watch;
 
