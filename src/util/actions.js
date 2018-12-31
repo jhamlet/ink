@@ -1,16 +1,21 @@
 import { converge, merge, nthArg, objOf, pipe } from 'ramda';
 
 /**
- * @param {*} type
+ * Creates an action object with the given `type` property
+ * @name ofType
+ * @param {String} type
  * @returns {Object}
  * @sig s -> { type: s }
  */
 export const ofType = objOf('type');
 
 /**
+ * Create an action object with the given `type` property and merging in any
+ * additional properties passed with the `values` argument.
+ * @name withType
  * @param {String} type
  * @param {Object} values
- * @param {Object}
+ * @returns {Object}
  * @sig t: string -> { [string]: * } -> { type: t, [string]: * }
  */
 export const withType = converge(merge, [
@@ -19,6 +24,9 @@ export const withType = converge(merge, [
 ]);
 
 /**
+ * Create an action object with the given `type` property as a string and a
+ * `{payloadProp}` property of any type.
+ * @name withTypeAndPayloadOf
  * @param {String} type
  * @param {String} payloadProp
  * @param {*} value
