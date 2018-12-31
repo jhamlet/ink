@@ -23,7 +23,8 @@ module.exports = {
   "rules": {
     "indent": [
       "error",
-      2
+      2,
+      { ignoredNodes: 'ConditionalExpression' }
     ],
     "linebreak-style": [
       "error",
