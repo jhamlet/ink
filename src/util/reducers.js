@@ -1,7 +1,17 @@
 import {
-  assocPath, concat, cond, flip, identity, map, nthArg, path as getPath, pipe, T
+  T,
+  assocPath,
+  concat,
+  cond,
+  flip,
+  identity,
+  map,
+  nthArg,
+  path as getPath,
+  pipe,
 } from 'ramda';
-import { isType } from './predicates';
+
+import { actionIsType } from './predicates';
 
 const { assign } = Object;
 
@@ -91,7 +101,7 @@ export const collectionReducer = (...args) => {
 
 export const conditionalReducer = pipe(
   map(([type, fn]) => [
-    pipe(nthArg(1), isType(type)),
+    pipe(nthArg(1), actionIsType(type)),
     fn
   ]),
   flip(concat)([[T, identity]]),

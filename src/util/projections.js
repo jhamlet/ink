@@ -8,11 +8,11 @@ import { isArray, isNil } from './predicates';
  * A `projection` is a mapping function. Something that 'projects' one thing
  * into something else.
  */
-export const nthArg0             = nthArg(0);
-export const nthArg1             = nthArg(1);
-export const nthArg2             = nthArg(2);
-export const nthArg3             = nthArg(3);
-export const nthArg4             = nthArg(4);
+export const firstArg            = nthArg(0);
+export const secondArg           = nthArg(1);
+export const thirdArg            = nthArg(2);
+export const fourthArg           = nthArg(3);
+export const fifthArg            = nthArg(4);
 export const noop                = () => {};
 export const emptyObject         = pipe(always({}), empty);
 export const emptyArray          = pipe(always([]), empty);
@@ -62,15 +62,15 @@ export const snakeToCamel =
 
 // @sig (string -> key) -> string -> [key, string]
 export const keyToPair = converge(pair, [
-  converge(call, [ nthArg0, nthArg1 ]),
-  nthArg1
+  converge(call, [ firstArg, secondArg ]),
+  secondArg
 ]);
 
 // @sig (key -> string) -> [string] => { string: string }
 export const enumerate = converge(fromPairs, [
   converge(map, [
-    converge(keyToPair, [ nthArg0 ]),
-    nthArg1
+    converge(keyToPair, [ firstArg ]),
+    secondArg
   ])
 ]);
 

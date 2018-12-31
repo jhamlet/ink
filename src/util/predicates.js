@@ -1,4 +1,15 @@
-import { complement, identical, is, isEmpty, isNil, pipe, type } from 'ramda';
+import {
+  complement,
+  converge,
+  identical,
+  is,
+  isEmpty,
+  isNil,
+  nthArg,
+  pipe,
+  prop,
+  type,
+} from 'ramda';
 /**
  * A `predicate`is a function that returns a boolean as to whether something
  * is, or isn't, or belongs, or does not belong.
@@ -68,4 +79,9 @@ export const notError     = complement(isError);
 export const notEmpty     = complement(isEmpty);
 export const notNil       = complement(isNil);
 export const notUndefined = complement(isUndefined);
+
+export const actionIsType = converge(identical, [
+  pipe(nthArg(1), prop('type')),
+  nthArg(0)
+]);
 
