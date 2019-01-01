@@ -24,7 +24,7 @@ module.exports = {
     "indent": [
       "error",
       2,
-      { ignoredNodes: 'ConditionalExpression' }
+      { ignoredNodes: ['ConditionalExpression'] }
     ],
     "linebreak-style": [
       "error",
