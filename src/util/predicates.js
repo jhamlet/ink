@@ -1,14 +1,17 @@
 import {
   complement,
-  converge,
+  curry,
+  difference,
   identical,
+  identity,
   is,
   isEmpty,
   isNil,
-  nthArg,
+  keys,
   pipe,
   prop,
   type,
+  useWith,
 } from 'ramda';
 /**
  * A `predicate`is a function that returns a boolean as to whether something
@@ -16,54 +19,12 @@ import {
  *
  * These functions should be very terse in what they do.
  */
-/**
- * Returns true if the value is undefined or null
- * @name isNil
- * @param {*} value
- * @returns {Boolean}
- */
-/**
- * Returns true if the value is empty for its type
- * @name isEmpty
- * @param {*} value
- * @returns {Boolean}
- */
 export { isNil, isEmpty };
 
-/**
- * Returns true if the value is an Object
- * @name isObject
- * @param {*} value
- * @returns {Boolean}
- */
 export const isObject     = is(Object);
-/**
- * Returns true if the value is an Array
- * @name isArray
- * @param {*} value
- * @returns {Boolean}
- */
 export const isArray      = is(Array);
-/**
- * Returns true if the value is a Function
- * @name isFunction
- * @param {*} value
- * @returns {Boolean}
- */
 export const isFunction   = is(Function);
-/**
- * Returns true if the value is a String
- * @name isString
- * @param {*} value
- * @returns {Boolean}
- */
 export const isString     = is(String);
-/**
- * Returns true if the value is a Number
- * @name isNumber
- * @param {*} value
- * @returns {Boolean}
- */
 export const isNumber     = is(Number);
 export const isBoolean    = is(Boolean);
 export const isDate       = is(Date);
@@ -80,8 +41,36 @@ export const notEmpty     = complement(isEmpty);
 export const notNil       = complement(isNil);
 export const notUndefined = complement(isUndefined);
 
-export const actionIsType = converge(identical, [
-  pipe(nthArg(1), prop('type')),
-  nthArg(0)
-]);
+/**
+ * Determine if a given object is of a particular `type`
+ * @sig string -> object -> boolean
+ */
+export const actionIsType = useWith(identical, [ identity, prop('type') ]);
+
+/**
+ * Determine if two objects are shallowly equivalant
+ * @sig a: object -> b: object -> boolean
+ */
+export const areEquivalent = curry((a, b) => {
+  const aKeys = keys(a);
+  const bKeys = keys(b);
+  const diff  = difference(aKeys, bKeys);
+
+  // difference in keys means they are not equivalent
+  if (diff.length) {
+    return false;
+  }
+
+  // first value that is not equal means they are not equivalent
+  const len = bKeys.length;
+  for (let i = 0; i < len; i++) {
+    const key = bKeys[i];
+    if (a[key] !== b[key]) {
+      return false;
+    }
+  }
+
+  // guess they are equivalent
+  return true;
+});
 
